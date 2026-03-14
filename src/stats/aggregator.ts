@@ -1,6 +1,7 @@
 /**
  * Stats aggregator.
  * Collects metrics and produces display-ready stats for console UI.
+ * Used by main loop for periodic stats display.
  */
 
 import type { Metrics } from './metrics';
