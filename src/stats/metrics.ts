@@ -15,6 +15,7 @@ export interface Metrics {
   readonly startTime: number;
 }
 
+/** Number of DEX pools monitored across Starknet */
 const POOLS_MONITORED = 36;
 const DEXS_ACTIVE = 9;
 
