@@ -1,7 +1,7 @@
 {
   "name": "strk-mev-bot",
   "version": "1.0.0-trial",
-  "description": "Starknet MEV Bot - Intelligent search and execution for MEV opportunities on the Starknet blockchain",
+  "description": "Starknet MEV Bot - Sandwich and backrun strategies across JediSwap, mySwap, Ekubo, and 6 more DEXs",
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc",
