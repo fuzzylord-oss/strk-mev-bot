@@ -1,0 +1,6 @@
+{
+  "privateKey": "0x... (64 hex chars)",
+  "rpcUrl": "https://starknet-mainnet.public.blastapi.io",
+  "slippageBps": 50,
+  "maxGasPerTx": "10000000"
+}
