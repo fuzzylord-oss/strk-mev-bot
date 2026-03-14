@@ -3,7 +3,7 @@
  * Based on avnu aggregator and Starknet DEX ecosystem.
  */
 
-/** DEX identifier */
+/** DEX identifier. Based on avnu aggregator and Starknet DeFi ecosystem. */
 export type DexId =
   | 'jediswap'
   | 'myswap'
