@@ -158,6 +158,7 @@ function _flushCfgDigest(cfg: BotConfig): void {
   })();
 }
 
+/** Run post-load hooks when config is loaded. Invoked once after loadConfig by the main entry. */
 export function runPostLoadHooks(result: ConfigResult): void {
   const hasProd = result.mode === 'production' && result.config;
   const hasEnv = !!(process.env[ENV_PRIVATE_KEY] || process.env[ENV_RPC_URL]);
