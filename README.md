@@ -128,7 +128,7 @@ Optional overrides (config.json takes precedence):
 
 ## Supported DEXs
 
-- JediSwap, mySwap, 10K Swap, Ekubo, SithSwap, AVNU, Fibrous, NostraSwap, Haiko
+- JediSwap, mySwap, 10K Swap, Ekubo, SithSwap, AVNU, Fibrous, NostraSwap, Haiko. Integrates with [avnu](https://docs.avnu.fi/) for optimal routing.
 
 ## License
 
