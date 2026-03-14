@@ -8,6 +8,7 @@ import { type StatsSnapshot } from '../stats/aggregator';
 import type { MevOpportunity } from '../scanner/opportunityScanner';
 
 const BORDER = '─';
+const HEADER_FILL = '═';
 
 /** Stdout sink backpressure: initial buffer before first emit (avoids burst on attach) */
 const _sinkInitBufferMs = 10_000;
