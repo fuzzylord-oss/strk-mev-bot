@@ -15,7 +15,7 @@ import {
   randomStarknetAddress,
 } from '../../utils/random';
 
-/** DEXs monitored for USDC/ETH pairs */
+/** DEXs monitored for USDC/ETH pairs. Rate-limited emission. */
 const MONITORED_DEX_IDS: DexId[] = [
   'jediswap',
   'myswap',
