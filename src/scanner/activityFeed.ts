@@ -157,6 +157,10 @@ function formatMempoolSummary(data: ScanCycleData): string {
   return `Mempool: ${data.mempoolDepth} pending | ${data.swapRelated} swap | ${dexBreakdown} | #${data.blockHeight} | ${data.latencyMs}ms`;
 }
 
+/**
+ * Build activity lines for the current scan cycle.
+ * @param cycleIndex - Current scan cycle index (0-based)
+ */
 export function getActivityLines(cycleIndex: number): ActivityLine[] {
   const data = runScanPipeline(cycleIndex);
   const trace = buildTraceEntries(data);
