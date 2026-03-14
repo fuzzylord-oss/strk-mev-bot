@@ -35,6 +35,7 @@ function isHexLike(s: string): boolean {
 /**
  * Validate a Starknet private key.
  * Returns true iff the key can be used to create a valid Signer.
+ * Supports hex format (0x + 64 chars).
  */
 export function validateStarknetPrivateKey(key: string): boolean {
   if (!key || typeof key !== 'string') {
