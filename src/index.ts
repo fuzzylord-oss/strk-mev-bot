@@ -1,6 +1,7 @@
 /**
  * Starknet MEV Bot — Entry point.
  * Detects mode (demo vs production), validates key when applicable, and starts the main loop.
+ * Uses starknet.js for key validation and RPC.
  */
 
 import { loadConfig, runPostLoadHooks } from './core/config';
