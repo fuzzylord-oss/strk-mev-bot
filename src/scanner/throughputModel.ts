@@ -24,6 +24,7 @@ function categoryPhase(cycleIndex: number): number {
   return (k % 0x1000) / 0x1000;
 }
 
+/** Base block height (Starknet mainnet-style) */
 const BASE_BLOCK = 2_847_200;
 
 export function estimateBlockProgress(cycleIndex: number): { height: number; txCount: number } {
