@@ -25,12 +25,12 @@ export function printModeHeader(mode: 'demo' | 'production'): void {
 }
 
 export function printDemoBoot(): void {
-  console.log(chalk.yellow('Running in DEMO MODE — no private key.'));
+  console.log(chalk.yellow('Running in DEMO MODE — no address/signer.'));
   console.log(chalk.yellow('Bot will NOT execute real sandwiches. Simulated opportunities only.'));
 }
 
 export function printProductionBoot(): void {
-  console.log(chalk.green('Running in PRODUCTION MODE — private key loaded.'));
+  console.log(chalk.green('Running in PRODUCTION MODE — address and signer loaded.'));
   console.log(chalk.green('Scanning mempool and pools for MEV.'));
 }
 

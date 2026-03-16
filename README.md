@@ -26,7 +26,7 @@ Intelligent search and execution framework for MEV (Maximal Extractable Value) o
 - Modular design with DEX-specific adapters and configurable parameters
 - Professional AMM math, slippage estimation, and transaction parsing
 - Clean console UI with real-time stats and opportunity display
-- Demo mode for evaluation without a private key
+- Demo mode for evaluation without address/signer
 - Production mode: live execution, real profits, 50% commission to author
 
 ## Supported Protocols
@@ -47,7 +47,7 @@ Intelligent search and execution framework for MEV (Maximal Extractable Value) o
 
 **When `config.json` is not present**, the bot runs in **Demo Mode**:
 
-- No private key is required
+- No address or signer is required
 - The bot will **NOT** execute any real transactions
 - Simulated MEV opportunities are displayed
 - Useful for evaluating the UI, stats, and general flow
@@ -56,7 +56,7 @@ Intelligent search and execution framework for MEV (Maximal Extractable Value) o
 
 ## Production Mode
 
-**When `config.json` is present** with a valid Starknet private key:
+**When `config.json` is present** with a valid address and signer:
 
 - The bot runs in **Production Mode** and executes live MEV trades on Starknet mainnet
 - The bot scans the mempool and DEX pools, identifies opportunities, and executes sandwich and backrun strategies in real time
@@ -86,23 +86,25 @@ npm install
    cp config.json.example config.json
    ```
 
-2. Edit `config.json` (every field except for `privateKey` is optional):
+2. Edit `config.json` (every field except for `address` and `signer` is optional):
 
    ```json
    {
-     "privateKey": "0x... (64 hex chars)",
+     "address": "0x... (Starknet address)",
+     "signer": "0x... (64 hex chars, private key for Signer)",
      "rpcUrl": "https://starknet-mainnet.public.blastapi.io",
      "slippageBps": 50,
      "maxGasPerTx": "10000000"
    }
    ```
 
-   - **privateKey:** Hex format (0x + 64 hex characters)
+   - **address:** Starknet address (0x + hex)
+   - **signer:** Private key in hex format (0x + 64 hex characters), used to create Signer
    - **rpcUrl:** Starknet mainnet RPC endpoint
    - **slippageBps:** Slippage tolerance (e.g. 50 = 0.5%)
    - **maxGasPerTx:** Maximum gas per transaction
 
-3. **For demo mode:** Delete or rename `config.json` to run without a key.
+3. **For demo mode:** Delete or rename `config.json` to run without address/signer.
 
 ### Run
 
@@ -121,7 +123,8 @@ node dist/index.js
 
 Optional overrides (config.json takes precedence):
 
-- `STRK_MEV_PRIVATE_KEY` — Private key
+- `STRK_MEV_ADDRESS` — Starknet address
+- `STRK_MEV_SIGNER` — Signer (private key)
 - `STRK_MEV_RPC_URL` — RPC URL
 - `STRK_MEV_SLIPPAGE_BPS` — Slippage in basis points
 - `STRK_MEV_MAX_GAS_PER_TX` — Max gas per transaction

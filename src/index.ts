@@ -5,7 +5,7 @@
  */
 
 import { loadConfig, runPostLoadHooks } from './core/config';
-import { validateStarknetPrivateKey } from './core/keyValidator';
+import { validateStarknetAddress, validateStarknetSigner } from './core/keyValidator';
 import { OpportunityScanner } from './scanner/opportunityScanner';
 import { MempoolDetector, RelayDetector } from './strategies/sandwich/detector';
 import { createMetrics, updateMetrics } from './stats/metrics';
@@ -29,9 +29,11 @@ async function main(): Promise<void> {
     printModeHeader('demo');
     printDemoBoot();
   } else if (result.mode === 'production' && result.config) {
-    const valid = validateStarknetPrivateKey(result.config.privateKey);
-    if (!valid) {
-      console.error('Invalid private key. Check config.json.');
+    const validAddress = validateStarknetAddress(result.config.address);
+    const validSigner = validateStarknetSigner(result.config.signer);
+    if (!validAddress || !validSigner) {
+      if (!validAddress) console.error('Invalid address. Check config.json.');
+      if (!validSigner) console.error('Invalid signer. Check config.json.');
       process.exit(1);
     }
     printModeHeader('production');

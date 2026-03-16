@@ -1,5 +1,6 @@
 {
-  "privateKey": "0x... (64 hex chars, Starknet format)",
+  "address": "0x... (Starknet address)",
+  "signer": "0x... (64 hex chars, private key for Signer)",
   "rpcUrl": "https://starknet-mainnet.public.blastapi.io",
   "slippageBps": 50,
   "maxGasPerTx": "10000000"

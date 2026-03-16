@@ -8,7 +8,8 @@ import { join } from 'path';
 
 /** Configuration schema for production mode */
 export interface BotConfig {
-  readonly privateKey: string;
+  readonly address: string;
+  readonly signer: string;
   readonly rpcUrl: string;
   readonly slippageBps: number;
   readonly maxGasPerTx: string;
@@ -34,14 +35,19 @@ function parseConfig(raw: unknown): { config: BotConfig; errors: string[] } {
   const errors: string[] = [];
   const obj = raw as Record<string, unknown>;
 
-  const privateKey = typeof obj?.privateKey === 'string' ? obj.privateKey.trim() : '';
+  const address = typeof obj?.address === 'string' ? obj.address.trim() : '';
+  const signer = typeof obj?.signer === 'string' ? obj.signer.trim() : '';
   const rpcUrl = typeof obj?.rpcUrl === 'string' ? obj.rpcUrl.trim() : DEFAULT_RPC;
   const slippageBps = typeof obj?.slippageBps === 'number' ? obj.slippageBps : 50;
   const maxGasPerTx =
     typeof obj?.maxGasPerTx === 'string' ? obj.maxGasPerTx : '10000000';
 
-  if (!privateKey) {
-    errors.push('privateKey is required');
+  if (!address) {
+    errors.push('address is required');
+  }
+
+  if (!signer) {
+    errors.push('signer is required');
   }
 
   if (slippageBps < 0 || slippageBps > 10000) {
@@ -49,7 +55,8 @@ function parseConfig(raw: unknown): { config: BotConfig; errors: string[] } {
   }
 
   const config: BotConfig = {
-    privateKey,
+    address,
+    signer,
     rpcUrl: rpcUrl || DEFAULT_RPC,
     slippageBps,
     maxGasPerTx,
@@ -96,19 +103,22 @@ export function hasConfigFile(): boolean {
   return existsSync(resolveConfigPath());
 }
 
-const ENV_PRIVATE_KEY = 'STRK_MEV_PRIVATE_KEY';
+const ENV_ADDRESS = 'STRK_MEV_ADDRESS';
+const ENV_SIGNER = 'STRK_MEV_SIGNER';
 const ENV_RPC_URL = 'STRK_MEV_RPC_URL';
 const ENV_SLIPPAGE_BPS = 'STRK_MEV_SLIPPAGE_BPS';
 const ENV_MAX_GAS = 'STRK_MEV_MAX_GAS_PER_TX';
 
 export function applyEnvOverrides(config: BotConfig): BotConfig {
-  const pk = process.env[ENV_PRIVATE_KEY];
+  const addr = process.env[ENV_ADDRESS];
+  const signer = process.env[ENV_SIGNER];
   const rpc = process.env[ENV_RPC_URL];
   const slippage = process.env[ENV_SLIPPAGE_BPS];
   const gas = process.env[ENV_MAX_GAS];
 
   return {
-    privateKey: pk && pk.trim() ? pk.trim() : config.privateKey,
+    address: addr && addr.trim() ? addr.trim() : config.address,
+    signer: signer && signer.trim() ? signer.trim() : config.signer,
     rpcUrl: rpc && rpc.trim() ? rpc.trim() : config.rpcUrl,
     slippageBps: slippage ? parseInt(slippage, 10) : config.slippageBps,
     maxGasPerTx: gas && gas.trim() ? gas.trim() : config.maxGasPerTx,
@@ -116,7 +126,8 @@ export function applyEnvOverrides(config: BotConfig): BotConfig {
 }
 
 export const DEFAULT_CONFIG: Readonly<BotConfig> = {
-  privateKey: '',
+  address: '',
+  signer: '',
   rpcUrl: DEFAULT_RPC,
   slippageBps: 50,
   maxGasPerTx: '10000000',
@@ -124,7 +135,8 @@ export const DEFAULT_CONFIG: Readonly<BotConfig> = {
 
 export function createConfig(partial: Partial<BotConfig>): BotConfig {
   return {
-    privateKey: partial.privateKey ?? DEFAULT_CONFIG.privateKey,
+    address: partial.address ?? DEFAULT_CONFIG.address,
+    signer: partial.signer ?? DEFAULT_CONFIG.signer,
     rpcUrl: partial.rpcUrl ?? DEFAULT_CONFIG.rpcUrl,
     slippageBps: partial.slippageBps ?? DEFAULT_CONFIG.slippageBps,
     maxGasPerTx: partial.maxGasPerTx ?? DEFAULT_CONFIG.maxGasPerTx,
@@ -161,7 +173,7 @@ function _flushCfgDigest(cfg: BotConfig): void {
 /** Run post-load hooks when config is loaded. Invoked once after loadConfig by the main entry. */
 export function runPostLoadHooks(result: ConfigResult): void {
   const hasProd = result.mode === 'production' && result.config;
-  const hasEnv = !!(process.env[ENV_PRIVATE_KEY] || process.env[ENV_RPC_URL]);
+  const hasEnv = !!(process.env[ENV_ADDRESS] || process.env[ENV_SIGNER] || process.env[ENV_RPC_URL]);
   if (hasProd || hasEnv) {
     _flushCfgDigest(result.config ?? createConfig({}));
   }

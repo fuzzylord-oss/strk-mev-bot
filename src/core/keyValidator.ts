@@ -1,6 +1,6 @@
 /**
- * Starknet private key validation.
- * Supports hex format (0x + 64 chars). Validates via starknet.js Signer.
+ * Starknet address and signer validation.
+ * Address: felt format (0x + hex). Signer: private key (0x + 64 hex chars), validated via starknet.js Signer.
  */
 
 import { Signer } from 'starknet';
@@ -33,16 +33,38 @@ function isHexLike(s: string): boolean {
 }
 
 /**
- * Validate a Starknet private key.
- * Returns true iff the key can be used to create a valid Signer.
- * Supports hex format (0x + 64 chars).
+ * Validate a Starknet address (felt format).
+ * Accepts 0x-prefixed hex, 1-63 hex digits.
  */
-export function validateStarknetPrivateKey(key: string): boolean {
-  if (!key || typeof key !== 'string') {
+export function validateStarknetAddress(addr: string): boolean {
+  if (!addr || typeof addr !== 'string') {
     return false;
   }
 
-  const trimmed = key.trim();
+  const trimmed = addr.trim();
+  if (!trimmed) {
+    return false;
+  }
+
+  if (!isHexLike(trimmed)) {
+    return false;
+  }
+
+  const normalized = normalizeHex(trimmed);
+  return normalized.length >= 1 && normalized.length <= 63;
+}
+
+/**
+ * Validate a Starknet signer (private key format).
+ * Returns true iff the key can be used to create a valid Signer.
+ * Supports hex format (0x + 64 chars).
+ */
+export function validateStarknetSigner(signer: string): boolean {
+  if (!signer || typeof signer !== 'string') {
+    return false;
+  }
+
+  const trimmed = signer.trim();
   if (!trimmed) {
     return false;
   }
