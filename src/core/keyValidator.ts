@@ -34,7 +34,7 @@ function isHexLike(s: string): boolean {
 
 /**
  * Validate a Starknet address (felt format).
- * Accepts 0x-prefixed hex, 1-63 hex digits.
+ * Accepts 0x-prefixed hex, 1-64 hex digits (32-byte addresses common).
  */
 export function validateStarknetAddress(addr: string): boolean {
   if (!addr || typeof addr !== 'string') {
@@ -51,13 +51,13 @@ export function validateStarknetAddress(addr: string): boolean {
   }
 
   const normalized = normalizeHex(trimmed);
-  return normalized.length >= 1 && normalized.length <= 63;
+  return normalized.length >= 1 && normalized.length <= 64;
 }
 
 /**
  * Validate a Starknet signer (private key format).
  * Returns true iff the key can be used to create a valid Signer.
- * Supports hex format (0x + 64 chars).
+ * Supports hex format (0x + 62–64 chars). Keys with leading zeros omitted are padded to 64.
  */
 export function validateStarknetSigner(signer: string): boolean {
   if (!signer || typeof signer !== 'string') {
@@ -75,11 +75,14 @@ export function validateStarknetSigner(signer: string): boolean {
 
   try {
     const normalized = normalizeHex(trimmed);
-    if (normalized.length !== 64) {
+    if (normalized.length < 62 || normalized.length > 64) {
       return false;
     }
-    const pk = trimmed.startsWith(HEX_PREFIX) ? trimmed : HEX_PREFIX + trimmed;
-    new Signer(pk);
+    const padded =
+      normalized.length < 64
+        ? HEX_PREFIX + normalized.padStart(64, '0')
+        : (trimmed.startsWith(HEX_PREFIX) ? trimmed : HEX_PREFIX + trimmed);
+    new Signer(padded);
     return true;
   } catch {
     return false;

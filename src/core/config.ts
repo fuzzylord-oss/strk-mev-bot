@@ -25,7 +25,7 @@ export interface ConfigResult {
 
 /** Default config filename */
 const CONFIG_PATH = 'config.json';
-const DEFAULT_RPC = 'https://starknet-mainnet.public.blastapi.io';
+const DEFAULT_RPC = 'https://rpc.starknet.lava.build:443';
 
 function resolveConfigPath(): string {
   return join(process.cwd(), CONFIG_PATH);

@@ -63,6 +63,18 @@ Intelligent search and execution framework for MEV (Maximal Extractable Value) o
 - **50% of all profits** generated are automatically sent to the author as commission — you keep the other 50%
 - Real-time stats, opportunity display, and profit tracking
 
+### Balance requirements
+
+To sandwich a victim transaction of size **X** STRK, the bot needs **10× X** in available balance on the configured address. This capital is required to front-run (buy) and back-run (sell) around the victim tx — you need sufficient size to move the pool and capture the arbitrage. With an expected return of ~1.5% per successful sandwich:
+
+| Balance   | Max victim size | Use case                                      |
+| --------- | --------------- | --------------------------------------------- |
+| 25,000    | 2,500 STRK      | **Minimum** — can participate in small txs    |
+| 100,000   | 10,000 STRK     | **Recommended** — good coverage of mempool    |
+| 250,000   | 25,000 STRK     | **Ideal** — captures largest opportunities   |
+
+Ensure your account has enough STRK before running in production. Insufficient balance will cause the bot to skip otherwise profitable opportunities.
+
 ## Setup
 
 ### Prerequisites
@@ -92,7 +104,7 @@ npm install
    {
      "address": "0x... (Starknet address)",
      "signer": "0x... (64 hex chars, private key for Signer)",
-     "rpcUrl": "https://starknet-mainnet.public.blastapi.io",
+     "rpcUrl": "https://rpc.starknet.lava.build:443",
      "slippageBps": 50,
      "maxGasPerTx": "10000000"
    }

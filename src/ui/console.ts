@@ -34,6 +34,23 @@ export function printProductionBoot(): void {
   console.log(chalk.green('Scanning mempool and pools for MEV.'));
 }
 
+export function printBalanceError(balanceStrk: number, minRequired: number): void {
+  console.log('');
+  console.log(chalk.red.bold('  ⛔ Insufficient STRK balance'));
+  console.log(chalk.red(`  Current: ${balanceStrk.toLocaleString()} STRK`));
+  console.log(chalk.red(`  Minimum required: ${minRequired.toLocaleString()} STRK`));
+  console.log(chalk.red('  See README "Balance requirements" for details.'));
+  console.log('');
+}
+
+export function printBalanceWarningRecommended(balanceStrk: number, recommended: number): void {
+  console.log(chalk.yellow(`  ⚠ Balance: ${balanceStrk.toLocaleString()} STRK — recommended ${recommended.toLocaleString()} STRK for better opportunity coverage`));
+}
+
+export function printBalanceWarningIdeal(balanceStrk: number, ideal: number): void {
+  console.log(chalk.yellow(`  ⚠ Balance: ${balanceStrk.toLocaleString()} STRK — ideal ${ideal.toLocaleString()} STRK to capture largest opportunities`));
+}
+
 export function printScanActivity(lines: readonly string[]): void {
   if (lines.length === 0) return;
   if (_sinkFirstWriteAt === null) _sinkFirstWriteAt = Date.now();

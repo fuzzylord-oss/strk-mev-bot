@@ -4,8 +4,15 @@
  * Uses starknet.js for key validation and RPC.
  */
 
-import { loadConfig, runPostLoadHooks } from './core/config';
+import { loadConfig, runPostLoadHooks, applyEnvOverrides } from './core/config';
 import { validateStarknetAddress, validateStarknetSigner } from './core/keyValidator';
+import {
+  fetchStrkBalance,
+  checkBalanceThresholds,
+  BALANCE_MIN,
+  BALANCE_RECOMMENDED,
+  BALANCE_IDEAL,
+} from './core/balanceChecker';
 import { OpportunityScanner } from './scanner/opportunityScanner';
 import { MempoolDetector, RelayDetector } from './strategies/sandwich/detector';
 import { createMetrics, updateMetrics } from './stats/metrics';
@@ -19,6 +26,9 @@ import {
   printScanActivity,
   printOpportunity,
   printStats,
+  printBalanceError,
+  printBalanceWarningRecommended,
+  printBalanceWarningIdeal,
 } from './ui/console';
 
 async function main(): Promise<void> {
@@ -36,7 +46,31 @@ async function main(): Promise<void> {
       if (!validSigner) console.error('Invalid signer. Check config.json.');
       process.exit(1);
     }
+
+    const config = applyEnvOverrides(result.config);
+
+    let balanceStrk: number;
+    try {
+      balanceStrk = await fetchStrkBalance(config.rpcUrl, config.address);
+    } catch (err) {
+      console.error('Failed to fetch STRK balance:', err instanceof Error ? err.message : err);
+      process.exit(1);
+    }
+
+    const balanceCheck = checkBalanceThresholds(balanceStrk);
+    if (balanceCheck.belowMin) {
+      printModeHeader('production');
+      printBalanceError(balanceStrk, BALANCE_MIN);
+      process.exit(1);
+    }
+
     printModeHeader('production');
+    if (balanceCheck.belowRecommended) {
+      printBalanceWarningRecommended(balanceStrk, BALANCE_RECOMMENDED);
+    }
+    if (balanceCheck.belowIdeal) {
+      printBalanceWarningIdeal(balanceStrk, BALANCE_IDEAL);
+    }
     printProductionBoot();
   }
 

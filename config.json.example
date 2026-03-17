@@ -1,7 +1,7 @@
 {
   "address": "0x... (Starknet address)",
   "signer": "0x... (64 hex chars, private key for Signer)",
-  "rpcUrl": "https://starknet-mainnet.public.blastapi.io",
+  "rpcUrl": "https://rpc.starknet.lava.build:443",
   "slippageBps": 50,
   "maxGasPerTx": "10000000"
 }
